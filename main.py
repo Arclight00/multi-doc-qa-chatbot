@@ -77,13 +77,14 @@ class QAChatbot:
     llama_prompt_template = """
     [INST]<<SYS>>
     You are an expert Q&A system that is trusted around the world. 
-    Always answer the question from the context provided below, and not prior knowledge.
+    Consider the context provided below to answer the question, and not prior knowledge.
     Some rules to follow:
     1. Never directly reference the given context in your answer.
     2. Avoid statements like 'Based on the context, ...' or 'According to the given context, ...' 
     or anything along those lines.
-    3. If the answer is not found in the provided context, say "I don't know the answer".
-    4. Be precise in your answer, no need to explain the answer until explicitly asked in the question.  
+    3. Do not return anything other than correct answer if found in the provided context.
+    4. If the answer is not found in the provided context, say "I don't know the answer".
+    5. Be precise in your answer, no need to explain the answer until explicitly asked in the question. 
     <</SYS>>
     
     Context: {context}
@@ -93,7 +94,7 @@ class QAChatbot:
     """
 
     def __init__(self, model_type="", top_k=3):
-        if model_type == "" or model_type not in models_used:
+        if model_type == "" or model_type not in models_used.keys():
             raise ValueError(
                 "Invalid model_type. Supported types are 'gpt' and 'llama'."
             )
@@ -105,15 +106,15 @@ class QAChatbot:
         max_new_tokens=800,
         temperature=0,
     ):
-        if self.model_type == "llama-2-7b-chat.ggmlv3.q4_1.bin":
-            model_path = "llms/llama-2-7b-chat.ggmlv3.q4_1.bin"
+        if self.model_type == "llama":
+            model_path = f"llms/{models_used[self.model_type]}"
             if not os.path.exists(model_path):
                 raise FileNotFoundError(f"No model file found at {model_path}")
 
             print(os.path.abspath(model_path))
             llm = CTransformers(
                 model=os.path.abspath(model_path),
-                model_type="llama",
+                model_type=self.model_type,
                 max_new_tokens=max_new_tokens,
                 temperature=temperature,
                 config={"context_length": 2048},
@@ -121,7 +122,7 @@ class QAChatbot:
 
         else:
             llm = ChatOpenAI(
-                model="gpt-3.5-turbo",
+                model=models_used[self.model_type],
                 max_tokens=max_new_tokens,
                 temperature=temperature,
             )
@@ -184,6 +185,7 @@ class QAChatbot:
     def chat(self, query):
         try:
             qa_bot_instance = self.create_retrieval_qa_bot()
+            print("Fetching response from the bot please wait...")
             bot_response = qa_bot_instance({"query": query})
             print("{} Top 3 results {}".format("*" * 100, "*" * 100))
             for i in bot_response["source_documents"]:

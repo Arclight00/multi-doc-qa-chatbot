@@ -40,15 +40,18 @@ In order to resolve this error, in pebblo.py shift the "import pwd" to line no. 
 Now run flask app using command ``python -m flask run``
 
 It is recommended to use **gpt-3.5-turbo** model as it is giving correct results while inferencing. 
-The case with **llama-2-7b** is however not the same as it sometimes doesn't output the correct results. And 
-also it was noticed that it is not following the instructions properly. 
-The purpose of using the llama-2-7b was to run this locally of my PC and as per my PC's configuration this 
-4-bit-quantised model was the best fit in terms of max RAM usage.
+The case with **llama-2-7b-q4** is however not the same as many times it is noticed that it doesn't output the 
+correct results. And also it was noticed that it is not following the instructions properly. Sometimes you have 
+to query same question again and again to get the correct answer from llama-2. 
+Maybe llama-2-13b can be better choice than this one or can also try with 8-bit quantised on 7b. 
+The purpose of choosing the llama-2-7b-q4 was to run this locally on my PC and 
+as per my PC's configuration this 4-bit-quantised model was the best fit in terms of max RAM usage.
 
 ## Next Steps
 As per the requirements all the points have been implemented and one can test it from their end. Now for the next steps
 here are few points that can be implemented:
-1. Build a RAG evaluation pipeline
-2. Implement RAG pipeline with other open-source LLMs like(llama-2-13B, Mistral 7B, falcon)
-3. Fine tuning LLM model
+1. Add ReRanker to rerank top 3 results fetched from the db, as it is not always the case that correct answer is in the first chunk.
+2. Build a RAG evaluation pipeline
+3. Implement RAG pipeline with other open-source LLMs like(llama-2-13B, Mistral 7B, falcon)
+4. Fine tuning LLM model
 

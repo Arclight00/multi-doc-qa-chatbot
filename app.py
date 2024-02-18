@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from main import QAChatbot, DataIngestion
 from config import models_used, pinecone_index_name
 
-from pycharm_flask_debug_patch import restart_with_reloader_patch
 
 app = Flask(__name__)
 
@@ -57,7 +56,7 @@ def chatbot_route():
 
         return render_template(
             "chatbot.html",
-            available_models=models_used,
+            available_models=models_used.keys(),
             selected_model=qa_chatbot.model_type,
             user_query=user_query,
             result=result,
@@ -66,7 +65,7 @@ def chatbot_route():
 
     return render_template(
         "chatbot.html",
-        available_models=models_used,
+        available_models=models_used.keys(),
         selected_model=qa_chatbot.model_type if qa_chatbot else "",
     )
 

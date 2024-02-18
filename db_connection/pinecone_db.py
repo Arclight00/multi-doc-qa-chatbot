@@ -77,7 +77,7 @@ class PineconeDB:
             )
             return vector_store
         except Exception as e:
-            print(f"Error while fetching embeddings from {self.index_name}, Error: {e}")
+            print(f"Error while inserting embeddings in {self.index_name}, Error: {e}")
             return []
 
     def process_and_upsert_to_pinecone(self, dataset, embed_model, batch_size=100):
