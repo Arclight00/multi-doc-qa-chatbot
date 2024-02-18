@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+</head>
+<body>
+    <h1>Chatbot</h1>
+
+    <form method="post">
+        <label for="chat_model">Select Model:</label>
+        <select name="chat_model">
+            {% for model in available_models %}
+                <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="user_query">User Query:</label>
+        <input type="text" name="user_query" required>
+
+        <button type="submit">Submit Query</button>
+    </form>
+
+    <div>
+        <p>User Query: {{ user_query }}</p>
+
+        <p>Selected Model: {{ selected_model }}</p>
+
+        <p>Chatbot Result: {{ result }}</p>
+
+        <p>Top 3 Matching Chunks:</p>
+        <ul>
+            {% for chunk in top_3_matching_chunks %}
+                <li>{{ chunk.page_content }}</li>
+            {% endfor %}
+        </ul>
+
+
+
+        <p>To go back on Data Ingestion page click on below button</p>
+        <a href="{{ url_for('data_ingest') }}"><button type="button">Data Ingestion</button></a>
+    </div>
+</body>
+</html>
